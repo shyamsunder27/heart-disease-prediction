@@ -33,7 +33,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from model_utils import (
     ALL_FEATURES,
-    BASE_DIR,
     DATA_DIR,
     FEATURES,
     METRICS_PATH,
@@ -145,6 +144,24 @@ def current_user():
         return None
 
     user = users_db.read().get(username)
+
+    # Allow the admin configured through Vercel environment variables.
+    admin_username = os.environ.get("ADMIN_USERNAME", "").strip().lower()
+    admin_password_hash = os.environ.get("ADMIN_PASSWORD_HASH", "")
+
+    if (
+        user is None
+        and admin_username
+        and username == admin_username
+        and admin_password_hash
+    ):
+        return {
+            "username": admin_username,
+            "email": admin_username,
+            "full_name": "Administrator",
+            "role": "admin",
+            "password_hash": admin_password_hash,
+        }
 
     if user is None:
         session.clear()
@@ -266,6 +283,24 @@ def login():
             )
         else:
             user = users_db.read().get(username)
+
+            # Fall back to the admin configured in Vercel environment variables.
+            admin_username = os.environ.get("ADMIN_USERNAME", "").strip().lower()
+            admin_password_hash = os.environ.get("ADMIN_PASSWORD_HASH", "")
+
+            if (
+                user is None
+                and admin_username
+                and username == admin_username
+                and admin_password_hash
+            ):
+                user = {
+                    "username": admin_username,
+                    "email": admin_username,
+                    "full_name": "Administrator",
+                    "role": "admin",
+                    "password_hash": admin_password_hash,
+                }
 
             if user and check_password_hash(
                 user["password_hash"], password
