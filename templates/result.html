@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Result{% endblock %}
+{% block content %}
+<h1>Assessment result</h1>
+<p class="sub">{{ a.created|when }}</p>
+<div class="card">
+  <div class="muted">Model-estimated probability of heart disease</div>
+  <div class="big">{{ a.probability|pct }}</div>
+  <div class="meter"><span style="width: {{ (a.probability * 100)|round(1) }}%"></span></div>
+  <p>Predicted class:
+    <span class="badge {{ 'high' if a.predicted else 'low' }}">
+      {{ 'Heart disease likely (class 1)' if a.predicted else 'Heart disease unlikely (class 0)' }}
+    </span>
+  </p>
+  <p class="muted">Classification uses a 50% probability threshold.</p>
+  <div class="disclaimer">
+    This is not a medical diagnosis. The model was trained on a small historical dataset
+    and has not been clinically validated. Please consult a qualified doctor about any health concern.
+  </div>
+  <div class="actions no-print">
+    <a class="btn" href="{{ url_for('report', assessment_id=a.id) }}">Printable report / save as PDF</a>
+    {% if current_user.role == 'patient' %}
+      <a class="btn ghost" href="{{ url_for('assess') }}">New assessment</a>
+      <a class="btn ghost" href="{{ url_for('history') }}">History</a>
+    {% else %}
+      <a class="btn ghost" href="{{ url_for('admin_patient', username=a.username) }}">Back to patient</a>
+    {% endif %}
+  </div>
+</div>
+<div class="card">
+  <h2>Submitted values</h2>
+  <table>{% for label, shown in inputs %}<tr><td>{{ label }}</td><td>{{ shown }}</td></tr>{% endfor %}</table>
+</div>
+{% endblock %}

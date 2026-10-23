@@ -1,0 +1,28 @@
+{
+  "dataset": {
+    "samples": 303,
+    "disease": 138,
+    "no_disease": 165,
+    "train_size": 242,
+    "test_size": 61
+  },
+  "test": {
+    "accuracy": 0.8361,
+    "precision": 0.8462,
+    "recall": 0.7857,
+    "f1": 0.8148,
+    "roc_auc": 0.9394
+  },
+  "confusion_matrix": {
+    "tn": 29,
+    "fp": 4,
+    "fn": 6,
+    "tp": 22
+  },
+  "cross_validation_5fold_on_train": {
+    "accuracy_mean": 0.8346,
+    "accuracy_std": 0.0299,
+    "roc_auc_mean": 0.9077,
+    "roc_auc_std": 0.0303
+  }
+}

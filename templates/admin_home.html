@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Admin - Patients{% endblock %}
+{% block content %}
+<h1>Registered patients</h1>
+<p class="sub">Administrator view</p>
+<div class="grid">
+  <div class="card"><div class="muted">Patients</div><div class="stat">{{ patients|length }}</div></div>
+  <div class="card"><div class="muted">Total assessments</div><div class="stat">{{ total }}</div></div>
+</div>
+<div class="card">
+  {% if patients %}
+  <table>
+    <tr><th>Name</th><th>Username</th><th>Registered</th><th>Assessments</th><th></th></tr>
+    {% for p in patients %}
+    <tr>
+      <td>{{ p.full_name }}</td><td>{{ p.username }}</td><td>{{ p.created|when }}</td>
+      <td>{{ counts.get(p.username, 0) }}</td>
+      <td><a href="{{ url_for('admin_patient', username=p.username) }}">Open</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="muted">No patients have registered yet.</p>{% endif %}
+</div>
+{% endblock %}

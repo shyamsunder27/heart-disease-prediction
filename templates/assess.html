@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}New assessment{% endblock %}
+{% block content %}
+<h1>New assessment</h1>
+<p class="sub">Enter your clinical values. All fields are required.</p>
+<form method="post" class="card" novalidate>
+  <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+  <div class="form-grid">
+  {% for name, spec in features.items() %}
+    <div class="field">
+      <label for="{{ name }}">{{ spec.label }}</label>
+      {% if spec.type == 'choice' %}
+        <select id="{{ name }}" name="{{ name }}" required>
+          <option value="">Select...</option>
+          {% for code, text in spec.choices.items() %}
+            <option value="{{ code }}" {{ 'selected' if values.get(name)|string == code|string }}>{{ text }}</option>
+          {% endfor %}
+        </select>
+      {% else %}
+        <input id="{{ name }}" name="{{ name }}" type="number" required
+               min="{{ spec.min }}" max="{{ spec.max }}" step="{{ spec.step }}"
+               value="{{ values.get(name, '') }}">
+      {% endif %}
+      {% if errors.get(name) %}<div class="err">{{ errors[name] }}</div>{% endif %}
+    </div>
+  {% endfor %}
+  </div>
+  <div class="disclaimer" style="margin:6px 0 16px;">
+    Results are an educational estimate from a statistical model, not medical advice.
+  </div>
+  <button type="submit">Get prediction</button>
+</form>
+{% endblock %}

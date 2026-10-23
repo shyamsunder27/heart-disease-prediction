@@ -1,0 +1,20 @@
+# Python files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Secrets
+.env
+.env.*
+
+# Local user and patient records
+data/users.json
+data/assessments.json
+
+# Logs and editor settings
+*.log
+.vscode/

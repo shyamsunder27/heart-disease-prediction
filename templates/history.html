@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+<h1>Assessment history</h1>
+<p class="sub">All of your previous assessments, newest first.</p>
+<div class="card">
+  {% if rows %}
+  <table>
+    <tr><th>Date</th><th>Probability</th><th>Predicted class</th><th></th></tr>
+    {% for a in rows %}
+    <tr>
+      <td>{{ a.created|when }}</td>
+      <td>{{ a.probability|pct }}</td>
+      <td><span class="badge {{ 'high' if a.predicted else 'low' }}">{{ 'Disease likely' if a.predicted else 'Disease unlikely' }}</span></td>
+      <td><a href="{{ url_for('result', assessment_id=a.id) }}">View</a> &middot;
+          <a href="{{ url_for('report', assessment_id=a.id) }}">Report</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="muted">No assessments yet. <a href="{{ url_for('assess') }}">Start one</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

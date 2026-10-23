@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>Create account</h1>
+  <p class="sub">Patient registration</p>
+  <form method="post" autocomplete="on">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <div class="field"><label for="full_name">Full name</label>
+      <input id="full_name" name="full_name" maxlength="80" required value="{{ request.form.get('full_name','') }}"></div>
+    <div class="field"><label for="username">Gmail address</label>
+      <input id="username" name="username" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="you@gmail.com" pattern="[A-Za-z0-9][A-Za-z0-9._%+\-]*@gmail\.com" title="Use a Gmail address ending in @gmail.com" required value="{{ request.form.get('username','') }}">
+      <small class="muted">Use your Gmail ID. It will also be your login ID.</small></div>
+    <div class="field"><label for="password">Password (min 8 characters)</label>
+      <input id="password" name="password" type="password" minlength="8" required></div>
+    <div class="field"><label for="confirm">Confirm password</label>
+      <input id="confirm" name="confirm" type="password" minlength="8" required></div>
+    <button type="submit">Register</button>
+    <p class="muted">Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+  </form>
+</div>
+{% endblock %}

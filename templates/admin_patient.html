@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Admin - {{ patient.full_name }}{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('admin_home') }}">&larr; All patients</a></p>
+<h1>{{ patient.full_name }}</h1>
+<p class="sub">{{ patient.username }} &middot; registered {{ patient.created|when }}</p>
+<div class="card">
+  <h2>Stored assessments ({{ rows|length }})</h2>
+  {% if rows %}
+  <table>
+    <tr><th>Date</th><th>Probability</th><th>Predicted class</th><th></th></tr>
+    {% for a in rows %}
+    <tr>
+      <td>{{ a.created|when }}</td><td>{{ a.probability|pct }}</td>
+      <td><span class="badge {{ 'high' if a.predicted else 'low' }}">{{ 'Disease likely' if a.predicted else 'Disease unlikely' }}</span></td>
+      <td><a href="{{ url_for('result', assessment_id=a.id) }}">View</a> &middot;
+          <a href="{{ url_for('report', assessment_id=a.id) }}">Report</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="muted">This patient has no assessments.</p>{% endif %}
+</div>
+{% endblock %}

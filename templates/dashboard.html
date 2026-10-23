@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Welcome, {{ current_user.full_name }}</h1>
+<p class="sub">Your personal dashboard</p>
+<div class="grid">
+  <div class="card"><div class="muted">Assessments completed</div><div class="stat">{{ total }}</div></div>
+  <div class="card"><h2>Start a new assessment</h2>
+    <a class="btn" href="{{ url_for('assess') }}">Enter health parameters</a></div>
+</div>
+<div class="card">
+  <h2>Recent assessments</h2>
+  {% if rows %}
+  <table>
+    <tr><th>Date</th><th>Estimated probability</th><th>Predicted class</th><th></th></tr>
+    {% for a in rows %}
+    <tr>
+      <td>{{ a.created|when }}</td>
+      <td>{{ a.probability|pct }}</td>
+      <td><span class="badge {{ 'high' if a.predicted else 'low' }}">{{ 'Disease likely' if a.predicted else 'Disease unlikely' }}</span></td>
+      <td><a href="{{ url_for('result', assessment_id=a.id) }}">View</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p><a href="{{ url_for('history') }}">See full history</a></p>
+  {% else %}
+  <p class="muted">No assessments yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

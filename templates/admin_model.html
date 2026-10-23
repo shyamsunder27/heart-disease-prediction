@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Admin - Model performance{% endblock %}
+{% block content %}
+<h1>Model performance</h1>
+<p class="sub">Logistic Regression on a held-out 20% test split (stratified).</p>
+{% if not m %}
+  <div class="card"><p>No metrics found. Run <code>python train_model.py</code>.</p></div>
+{% else %}
+<div class="grid">
+  {% for key, label in [('accuracy','Accuracy'),('precision','Precision'),('recall','Recall'),('f1','F1-score'),('roc_auc','ROC-AUC')] %}
+  <div class="card"><div class="muted">{{ label }}</div><div class="stat">{{ '%.3f'|format(m.test[key]) }}</div></div>
+  {% endfor %}
+</div>
+<div class="card">
+  <h2>Confusion matrix (test set, n = {{ m.dataset.test_size }})</h2>
+  <div class="cm">
+    <div></div><div class="h">Predicted: no disease</div><div class="h">Predicted: disease</div>
+    <div class="h">Actual: no disease</div><div class="cell good">{{ m.confusion_matrix.tn }}</div><div class="cell bad">{{ m.confusion_matrix.fp }}</div>
+    <div class="h">Actual: disease</div><div class="cell bad">{{ m.confusion_matrix.fn }}</div><div class="cell good">{{ m.confusion_matrix.tp }}</div>
+  </div>
+</div>
+<div class="card">
+  <h2>Cross-validation (5-fold, training data)</h2>
+  <p>Accuracy {{ '%.3f'|format(m.cross_validation_5fold_on_train.accuracy_mean) }}
+     &plusmn; {{ '%.3f'|format(m.cross_validation_5fold_on_train.accuracy_std) }};
+     ROC-AUC {{ '%.3f'|format(m.cross_validation_5fold_on_train.roc_auc_mean) }}
+     &plusmn; {{ '%.3f'|format(m.cross_validation_5fold_on_train.roc_auc_std) }}</p>
+  <p class="muted">Dataset: {{ m.dataset.samples }} records ({{ m.dataset.disease }} disease,
+    {{ m.dataset.no_disease }} no disease). With only {{ m.dataset.test_size }} test records, these numbers
+    carry wide uncertainty; the cross-validation figures are a steadier guide.</p>
+</div>
+{% endif %}
+{% endblock %}

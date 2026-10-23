@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="text-align:center;padding:40px 22px;">
+  <h1>Heart Disease Prediction System</h1>
+  <p class="sub" style="max-width:560px;margin:8px auto 22px;">
+    Enter a few clinical measurements and get a model-estimated probability from a
+    Logistic Regression classifier trained on the UCI Cleveland heart disease data.
+  </p>
+  <div class="actions" style="justify-content:center;">
+    <a class="btn" href="{{ url_for('register') }}">Create an account</a>
+    <a class="btn ghost" href="{{ url_for('login') }}">Log in</a>
+  </div>
+</div>
+<div class="disclaimer">
+  <strong>Academic use only.</strong> Predictions are not a medical diagnosis and must not be used
+  for clinical decisions. If you have health concerns, please consult a qualified doctor.
+</div>
+{% endblock %}
